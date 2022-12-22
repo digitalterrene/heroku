@@ -39,7 +39,7 @@ switch ($method) {
             $stmt->execute();
             $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
         };
-        //echo json_encode($products);
+        echo json_encode($products);
         break;
 
     case 'POST':
@@ -66,61 +66,12 @@ switch ($method) {
         }
         //MANIPULATING TO HANDLE DELETE
         else {
-print_r($product);
-echo 'done';
-            // if (is_object($product)) {
-            //     print_r($product);
-            //     $arr = (array)$product;
-            //     print_r($arr);
+            //print_r($product);
+            echo 'done';
+            $ids = explode(',', $product);
 
-            //     foreach ($arr as $ids) {
-            //         $sql = "DELETE FROM products WHERE id in ($ids) ";
-            //         $stmt = $conn->prepare($sql);
-            //         if ($stmt->execute()) {
-            //             $response = ['status' => 1, 'message' => 'Record deleted successfully'];
-            //         } else {
-            //             $response = ['status' => 0, 'message' => 'Failed to delete record'];
-            //         }
-            //         echo json_encode($response);
-            //     }
-            // } else {
-            //     echo 'this is not an object';
-            // }
-        }
-
-        echo json_encode($response);
-        break;
-
-    case 'PUT':
-        $user = json_decode(file_get_contents('php://input'));
-        $sql = "UPDATE products SET name = :name, email = :email, mobile = :mobile, created_at = :updated_at WHERE id = :id";
-        $stmt = $conn->prepare($sql);
-        $updated_at = date('Y-m-d');
-        $stmt->bindParam(':id', $user->id);
-        $stmt->bindParam(':name', $user->name);
-        $stmt->bindParam(':email', $user->email);
-        $stmt->bindParam(':mobile', $user->mobile);
-        $stmt->bindParam(':updated_at', $updated_at);
-
-        if ($stmt->execute()) {
-            $response = ['status' => 1, 'message' => 'Record updated successfully'];
-        } else {
-            $response = ['status' => 0, 'message' => 'Failed to update record'];
-        }
-        echo json_encode($response);
-        break;
-
-    case 'PUT':
-        $product = json_decode(file_get_contents('php://input'));
-        $idToDelete = 2;
-
-        if (is_object($product)) {
-            print_r($product);
-            $arr = (array)$product;
-            print_r($arr);
-
-            foreach ($arr as $ids) {
-                $sql = "DELETE FROM products WHERE id in ($ids) ";
+            foreach ($ids as $id) {
+                $sql = "DELETE FROM products WHERE id in ($id) ";
                 $stmt = $conn->prepare($sql);
                 if ($stmt->execute()) {
                     $response = ['status' => 1, 'message' => 'Record deleted successfully'];
@@ -129,8 +80,9 @@ echo 'done';
                 }
                 echo json_encode($response);
             }
-        } else {
-            echo 'this is not an object';
         }
+
+        echo json_encode($response);
         break;
+
 }
